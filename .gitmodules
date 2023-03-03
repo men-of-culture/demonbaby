@@ -1,0 +1,3 @@
+[submodule "pipelines-dotnet-core"]
+	path = pipelines-dotnet-core
+	url = https://github.com/MicrosoftDocs/pipelines-dotnet-core
