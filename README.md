@@ -14,3 +14,5 @@ This is our test environment and every feature should be merged to the test bran
 Every new change to the source code should start as a feature. Git commands to create feature branch:
 1. `git checkout master`
 2. `git checkout -b feature-TRELLO TICKET NUMBER`
+
+pipeline test
