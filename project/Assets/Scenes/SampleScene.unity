@@ -1071,8 +1071,8 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 94.231.108.215
-    Port: 8080
+    Address: 127.0.0.1
+    Port: 7777
     ServerListenAddress: 
   DebugSimulator:
     PacketDelayMS: 0
