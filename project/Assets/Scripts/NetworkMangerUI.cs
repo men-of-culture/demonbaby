@@ -10,6 +10,17 @@ public class NetworkMangerUI : MonoBehaviour
     [SerializeField] private Button hostBtn;
     [SerializeField] private Button clientBtn;
 
+    private void Start()
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        foreach (var item in args) 
+        {
+            if (item == "-launch-as-server")
+            {
+                NetworkManager.Singleton.StartServer();
+            }
+        }
+    }
     private void Awake()
     {
         serverBtn.onClick.AddListener(() => {
