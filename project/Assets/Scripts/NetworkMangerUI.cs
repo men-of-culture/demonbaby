@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +16,10 @@ public class NetworkMangerUI : MonoBehaviour
         {
             if (item == "-launch-as-server")
             {
+                NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
+                    "10.0.0.4",
+                    (ushort)7777
+                );
                 NetworkManager.Singleton.StartServer();
             }
         }
@@ -24,14 +27,26 @@ public class NetworkMangerUI : MonoBehaviour
     private void Awake()
     {
         serverBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
+                "127.0.0.1",
+                (ushort)7777
+            );
             NetworkManager.Singleton.StartServer();
         });
 
         hostBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
+                "127.0.0.1",
+                (ushort)7777
+            );
             NetworkManager.Singleton.StartHost();
         });
 
         clientBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
+                "20.67.245.84", //"127.0.0.1"
+                (ushort)7777
+            );
             NetworkManager.Singleton.StartClient();
         });
     }

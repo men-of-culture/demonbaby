@@ -136,9 +136,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252cec73d55a5a149870117ec628901c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 100
+  movementSpeed: 50
   projectile: {fileID: 3043018594900656734, guid: 67b456a003073d24f9ff078034feacef,
     type: 3}
+  mainCamera: {fileID: 0}
 --- !u!114 &-9184568359172004423
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -240,6 +240,8 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -364,6 +366,37 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec3f2e2489226a5458a33e4bd9ea36a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  isActiveFirst: 0
+  player: {fileID: 0}
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3543237654
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &336484062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,8 +1104,8 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 20.67.245.84
-    Port: 7777
+    Address: 
+    Port: 0
     ServerListenAddress: 
   DebugSimulator:
     PacketDelayMS: 0
@@ -1100,6 +1133,12 @@ MonoBehaviour:
     NetworkPrefabs:
     - Override: 0
       Prefab: {fileID: 8330622960906631069, guid: 2c2dcb90b8c893d40b12f83305a3e663,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 3043018594900656734, guid: 67b456a003073d24f9ff078034feacef,
         type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
