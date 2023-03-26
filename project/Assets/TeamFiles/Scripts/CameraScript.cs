@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class cameraScript : MonoBehaviour
+public class CameraScript : MonoBehaviour
 {
     public bool isActive;
     public bool isActiveFirst;
