@@ -17,11 +17,11 @@ public class ProjectileScript : NetworkBehaviour
         if (!IsServer) return;
         Vector3 vec3 = transform.forward * Time.deltaTime * projectileSpeed;
         transform.position += vec3;
-        if(projectileTimer < 1)
+        if(projectileTimer < 1.5f)
         {
             projectileTimer += Time.deltaTime;
         }
-        if(projectileTimer >= 1)
+        if(projectileTimer >= 1.5f)
         {
             GetComponent<NetworkObject>().Despawn();
         }
