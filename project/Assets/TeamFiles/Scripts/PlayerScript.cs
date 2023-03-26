@@ -21,8 +21,7 @@ public class PlayerScript : NetworkBehaviour
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        gameObject.name = "Player"+((float)GetComponent<NetworkObject>().OwnerClientId).ToString();
+        SetPlayerReferences();
         if(IsServer){
         }
         if (!IsOwner) return;
@@ -43,6 +42,11 @@ public class PlayerScript : NetworkBehaviour
             PlayerGravity();
             PlayerShotServerSide();
         }
+    }
+
+    private void SetPlayerReferences(){
+        characterController = GetComponent<CharacterController>();
+        gameObject.name = "Player"+((float)GetComponent<NetworkObject>().OwnerClientId).ToString();
     }
 
     private void RaycastForward(){
