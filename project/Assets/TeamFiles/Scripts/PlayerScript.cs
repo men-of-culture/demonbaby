@@ -16,14 +16,14 @@ public class PlayerScript : NetworkBehaviour
     public GameObject projectilePrefab;
     public GameObject myProjectile;
     public CharacterController characterController;
-    public int shotCooldown = 1;
+    public float shotCooldown = 0.5f;
     public float shotCooldownTimer = 0.0f;
 
     void Start()
     {
+        characterController = GetComponent<CharacterController>();
+        gameObject.name = "Player"+((float)GetComponent<NetworkObject>().OwnerClientId).ToString();
         if(IsServer){
-            characterController = GetComponent<CharacterController>();
-            gameObject.name = "Player"+((float)GetComponent<NetworkObject>().OwnerClientId).ToString();
         }
         if (!IsOwner) return;
         mainCamera = Camera.main;
@@ -146,7 +146,7 @@ public class PlayerScript : NetworkBehaviour
     void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
-        if (other.gameObject.name == "Projectile(Clone)")
+        if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
         {
             Vector3 vec3 = gameObject.transform.position - other.transform.position;
             vec3 = new Vector3(vec3.x, 0.0f, vec3.z).normalized * Time.deltaTime * knockbackForce;
