@@ -18,19 +18,30 @@ public class PlayerScript : NetworkBehaviour
     public CharacterController characterController;
     public float shotCooldown = 0.5f;
     public float shotCooldownTimer = 0.0f;
+    public NetworkVariable<bool> grounded;
 
     void Start()
     {
+        // clients
         SetPlayerReferences();
-        if(IsServer){
+
+        // owner
+        if(IsOwner)
+        {
+            mainCamera = Camera.main;
         }
-        if (!IsOwner) return;
-        mainCamera = Camera.main;
+
+        // server
+        if (!IsServer) return;
     }
 
     void Update()
     {
-        if (IsOwner){
+        // clients
+
+        // owner
+        if (IsOwner)
+        {
             PlayerCamera();
             PlayerLookAtMouse();
             PlayerMovement();
@@ -38,10 +49,12 @@ public class PlayerScript : NetworkBehaviour
             PlayerShot();
             RaycastForward();
         }
-        if (IsServer){
-            PlayerGravity();
-            PlayerShotServerSide();
-        }
+        
+        // server
+        if (!IsServer) return;
+        PlayerGroundedCheck();
+        PlayerGravity();
+        PlayerShotServerSide();
     }
 
     private void SetPlayerReferences(){
@@ -60,10 +73,14 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
+    private void PlayerGroundedCheck(){
+        if(characterController.isGrounded) grounded.Value = true;
+        else grounded.Value = false;
+    }
+
     private void PlayerGravity(){
-        if(characterController.isGrounded == false){
-            characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
-        }
+        if(grounded.Value != false) return;
+        characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
     }
 
     private void PlayerCamera(){
@@ -72,7 +89,7 @@ public class PlayerScript : NetworkBehaviour
 
     private void PlayerLookAtMouse(){
         Plane playerPlane = new Plane(Vector3.up, transform.position);
-        if (mainCamera is { })
+        if (mainCamera is not { })
         {
             Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
             float hitdist = 0.0f;
@@ -113,7 +130,7 @@ public class PlayerScript : NetworkBehaviour
     }
 
     private void PlayerJump(){
-        if(characterController.isGrounded == true & Input.GetKeyDown(KeyCode.Space)){
+        if(grounded.Value == true & Input.GetKeyDown(KeyCode.Space)){
             PlayerJumpServerRpc();
         }
     }
@@ -147,7 +164,7 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
