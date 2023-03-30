@@ -871,7 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69206e80bd64d94c9cc4d216c66010c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  movementSpeed: 4
   jumpHeight: 10
   lookAtMouseSpeed: 10
   knockbackForce: 100
@@ -880,6 +880,10 @@ MonoBehaviour:
     type: 3}
   myProjectile: {fileID: 0}
   characterController: {fileID: 0}
+  shotCooldown: 0.5
+  shotCooldownTimer: 0
+  grounded:
+    m_InternalValue: 0
 --- !u!114 &-9184568359172004423
 MonoBehaviour:
   m_ObjectHideFlags: 0
