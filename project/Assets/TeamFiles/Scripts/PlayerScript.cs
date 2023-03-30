@@ -109,18 +109,16 @@ public class PlayerScript : NetworkBehaviour
     }
 
     private void PlayerMovement(){
+
         var moveDir = new Vector3(0, 0, 0);
-        var w = Input.GetKey(KeyCode.W);
-        var s = Input.GetKey(KeyCode.S);
-        var a = Input.GetKey(KeyCode.A);
-        var d = Input.GetKey(KeyCode.D);
 
-        if (w) moveDir.z = 1;
-        else if (s) moveDir.z = -1;
-        if (a) moveDir.x = -1;
-        else if (d) moveDir.x = 1;
+        if (Input.GetKey(KeyCode.W)) moveDir.z += 1;
+        if (Input.GetKey(KeyCode.S)) moveDir.z += -1;
+        if (Input.GetKey(KeyCode.A)) moveDir.x += -1;
+        if (Input.GetKey(KeyCode.D)) moveDir.x += 1;
+        //if(moveDir == new Vector3(0, 0, 0)) return;
 
-        if (w || s || a || d) PlayerMovementServerRpc(moveDir.normalized);
+        PlayerMovementServerRpc(moveDir.normalized);
     }
 
     [ServerRpc]
