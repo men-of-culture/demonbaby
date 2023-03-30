@@ -89,7 +89,7 @@ public class PlayerScript : NetworkBehaviour
 
     private void PlayerLookAtMouse(){
         Plane playerPlane = new Plane(Vector3.up, transform.position);
-        if (mainCamera is not { })
+        if (mainCamera is { })
         {
             Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
             float hitdist = 0.0f;
