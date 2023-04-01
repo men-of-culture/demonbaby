@@ -57,12 +57,14 @@ public class PlayerScript : NetworkBehaviour
         PlayerShotServerSide();
     }
 
-    private void SetPlayerReferences(){
+    private void SetPlayerReferences()
+    {
         characterController = GetComponent<CharacterController>();
         gameObject.name = "Player"+((float)GetComponent<NetworkObject>().OwnerClientId).ToString();
     }
 
-    private void RaycastForward(){
+    private void RaycastForward()
+    {
         RaycastHit hit;
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1f, Color.white);
         if (Physics.Raycast(transform.position, transform.forward, out hit, 1f))
@@ -73,33 +75,36 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
-    private void PlayerGroundedCheck(){
+    private void PlayerGroundedCheck()
+    {
         if(characterController.isGrounded) grounded.Value = true;
         else grounded.Value = false;
     }
 
-    private void PlayerGravity(){
+    private void PlayerGravity()
+    {
         if(grounded.Value != false) return;
         characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
     }
 
-    private void PlayerCamera(){
+    private void PlayerCamera()
+    {
         mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 10, -10);
     }
 
-    private void PlayerLookAtMouse(){
+    private void PlayerLookAtMouse()
+    {
+        if (mainCamera is not { }) return;
+
         Plane playerPlane = new Plane(Vector3.up, transform.position);
-        if (mainCamera is { })
-        {
-            Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
-            float hitdist = 0.0f;
-            if (playerPlane.Raycast (ray, out hitdist)) 
-            {
-                Vector3 targetPoint = ray.GetPoint(hitdist);
-                Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-                PlayerLookAtMouseServerRpc(targetRotation);
-            }
-        }
+        Ray ray = mainCamera.ScreenPointToRay (Input.mousePosition);
+        float hitdist = 0.0f;
+
+        if (!playerPlane.Raycast (ray, out hitdist)) return;
+
+        Vector3 targetPoint = ray.GetPoint(hitdist);
+        Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+        PlayerLookAtMouseServerRpc(targetRotation);
     }
 
     [ServerRpc]
@@ -108,26 +113,27 @@ public class PlayerScript : NetworkBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookAtMouseSpeed * Time.deltaTime);
     }
 
-    private void PlayerMovement(){
-
+    private void PlayerMovement()
+    {
         var moveDir = new Vector3(0, 0, 0);
 
         if (Input.GetKey(KeyCode.W)) moveDir.z += 1;
         if (Input.GetKey(KeyCode.S)) moveDir.z += -1;
         if (Input.GetKey(KeyCode.A)) moveDir.x += -1;
         if (Input.GetKey(KeyCode.D)) moveDir.x += 1;
-        //if(moveDir == new Vector3(0, 0, 0)) return;
+        if(moveDir == new Vector3(0, 0, 0)) return;
 
-        PlayerMovementServerRpc(moveDir.normalized);
+        PlayerMovementServerRpc(moveDir);
     }
 
     [ServerRpc]
     private void PlayerMovementServerRpc(Vector3 moveDir)
     {
-        characterController.Move(moveDir * Time.deltaTime * movementSpeed);
+        characterController.Move(moveDir.normalized * Time.deltaTime * movementSpeed);
     }
 
-    private void PlayerJump(){
+    private void PlayerJump()
+    {
         if(grounded.Value == true & Input.GetKeyDown(KeyCode.Space)){
             PlayerJumpServerRpc();
         }
@@ -139,7 +145,8 @@ public class PlayerScript : NetworkBehaviour
         characterController.Move(new Vector3(0, 1, 0) * jumpHeight);
     }
 
-    private void PlayerShot(){
+    private void PlayerShot()
+    {
         if (Input.GetKeyUp(KeyCode.Mouse0) && IsOwner){
             PlayerShotServerRpc();
         }
