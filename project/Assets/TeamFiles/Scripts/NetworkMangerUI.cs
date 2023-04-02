@@ -20,7 +20,7 @@ public class NetworkMangerUI : MonoBehaviour
                     "35.228.146.171",
                     (ushort)9000
                     // "10.0.0.4",
-                    // (ushort)7777 //
+                    // (ushort)7777
                 );
                 NetworkManager.Singleton.StartServer();
             }
