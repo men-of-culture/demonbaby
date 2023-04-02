@@ -17,8 +17,10 @@ public class NetworkMangerUI : MonoBehaviour
             if (item == "-launch-as-server")
             {
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
-                    "10.0.0.4",
-                    (ushort)7777
+                    "35.228.146.171",
+                    (ushort)9000
+                    // "10.0.0.4",
+                    // (ushort)7777
                 );
                 NetworkManager.Singleton.StartServer();
             }
@@ -44,8 +46,10 @@ public class NetworkMangerUI : MonoBehaviour
 
         clientBtn.onClick.AddListener(() => {
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
-                "127.0.0.1", //"20.67.245.84"
-                (ushort)7777
+                "35.228.146.171",
+                (ushort)9000
+                // "127.0.0.1", //"20.67.245.84"
+                // (ushort)7777
             );
             NetworkManager.Singleton.StartClient();
         });
