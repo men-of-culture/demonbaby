@@ -14,7 +14,6 @@ public class PlayerScript : NetworkBehaviour
     public int knockbackForce;
     public Camera mainCamera;
     public GameObject projectilePrefab;
-    public GameObject myProjectile;
     public CharacterController characterController;
     public float shotCooldown = 0.5f;
     public float shotCooldownTimer = 0.0f;
@@ -156,7 +155,7 @@ public class PlayerScript : NetworkBehaviour
     private void PlayerShotServerRpc(ServerRpcParams serverRpcParams = default)
     {
         if(shotCooldownTimer >= shotCooldown){
-            myProjectile = Instantiate(projectilePrefab, transform.position + gameObject.transform.forward, transform.rotation);
+            var myProjectile = Instantiate(projectilePrefab, transform.position + gameObject.transform.forward, transform.rotation);
             myProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
             shotCooldownTimer = 0;
         }
