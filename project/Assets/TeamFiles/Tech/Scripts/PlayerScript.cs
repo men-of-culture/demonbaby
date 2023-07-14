@@ -101,20 +101,18 @@ public class PlayerScript : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Script change");
-        
         if(!IsServer) return;
-        if (other.gameObject.tag == "Lava") 
-        {
-            health += -1;
-            if (health == 0) {transform.position = new Vector3(0, 2, 0);}
-        }
-
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
         {
-            Vector3 vec3 = (gameObject.transform.position - other.transform.position) + (other.gameObject.transform.forward);
+            Vector3 vec3 = gameObject.transform.position - other.transform.position;
             vec3 = new Vector3(vec3.x, 0.0f, vec3.z).normalized * Time.deltaTime * knockbackForce;
             characterController.Move(vec3);
+        }
+        if (other.gameObject.name == "ResetTrigger")
+        {
+            characterController.enabled = false;
+            transform.position = new Vector3(0, 10, 0);
+            characterController.enabled = true;
         }
     }
 }
