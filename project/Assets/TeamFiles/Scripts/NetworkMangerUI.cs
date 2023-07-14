@@ -44,7 +44,7 @@ public class NetworkMangerUI : MonoBehaviour
 
         clientBtn.onClick.AddListener(() => {
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
-                "20.67.245.84", //"127.0.0.1"
+                "127.0.0.1", //"20.67.245.84"
                 (ushort)7777
             );
             NetworkManager.Singleton.StartClient();

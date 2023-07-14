@@ -297,6 +297,26 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
+<<<<<<< HEAD
+=======
+# my ignores
+*.cs.meta
+*.meta
+*.log
+
+project/[Ll]ibrary/
+project/[Tt]emp/
+project/[Oo]bj/
+project/[Bb]uild/
+project/[Bb]uilds/
+project/[Ll]ogs/
+project/[Uu]ser[Ss]ettings/
+project/.vscode
+
+
+
+
+>>>>>>> ed352a7 (stuff)
 # Unity3D generated file on crash reports
 sysinfo.txt
 
