@@ -153,9 +153,6 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
 --- !u!143 &-9209201360542858466
 CharacterController:
   m_ObjectHideFlags: 0
@@ -413,6 +410,3 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
->>>>>>> Stashed changes
-=======
->>>>>>> 2840cf5a12f5b8d95fe8d8e1e1e4f39172278f85
