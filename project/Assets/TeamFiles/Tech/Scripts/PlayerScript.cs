@@ -99,7 +99,7 @@ public class PlayerScript : NetworkBehaviour
         myProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
     }
 
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
         if (other.gameObject.tag == "Lava") 

@@ -22,7 +22,7 @@
 
 ### macOS ###
 # General
-.DS_Store
+*.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -676,5 +676,7 @@ FodyWeavers.xsd
 
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
+project/ProjectSettings/BurstAotSettings_StandaloneOSX.json
+
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,androidstudio,visualstudio,unity,windows,macos,linux,blender
