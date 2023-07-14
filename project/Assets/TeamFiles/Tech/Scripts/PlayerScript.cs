@@ -101,6 +101,8 @@ public class PlayerScript : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Script change");
+        
         if(!IsServer) return;
         if (other.gameObject.tag == "Lava") 
         {
