@@ -31,14 +31,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3740856294210424317}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7997503, y: 2.546, z: -4.190258}
+  m_LocalPosition: {x: 2.7997503, y: 1.76, z: -4.190258}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8426818709230677015}
-  - {fileID: 4836797442292926294}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8443759119574082771
 MeshFilter:
@@ -155,6 +153,7 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 --- !u!143 &-9209201360542858466
@@ -415,3 +414,5 @@ SphereCollider:
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 >>>>>>> Stashed changes
+=======
+>>>>>>> 2840cf5a12f5b8d95fe8d8e1e1e4f39172278f85

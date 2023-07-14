@@ -4840,12 +4840,15 @@ GameObject:
   - component: {fileID: 894058274733278724}
   - component: {fileID: 3377910218340740241}
   - component: {fileID: 1860032225475954092}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
   - component: {fileID: 3091743753182810834}
   - component: {fileID: -7984339619137424728}
   - component: {fileID: -8429289609322757659}
 >>>>>>> Stashed changes
+=======
+>>>>>>> 2840cf5a12f5b8d95fe8d8e1e1e4f39172278f85
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -4864,6 +4867,7 @@ Transform:
   m_LocalPosition: {x: 7.75, y: 2.31, z: -4.190258}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   m_Children: []
   m_Father: {fileID: 0}
@@ -4874,6 +4878,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
 >>>>>>> Stashed changes
+=======
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+>>>>>>> 2840cf5a12f5b8d95fe8d8e1e1e4f39172278f85
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &894058274733278724
 MeshFilter:
@@ -4946,6 +4955,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 --- !u!114 &3091743753182810834
@@ -5005,3 +5015,5 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
 >>>>>>> Stashed changes
+=======
+>>>>>>> 2840cf5a12f5b8d95fe8d8e1e1e4f39172278f85
