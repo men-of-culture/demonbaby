@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class PlayerScript : NetworkBehaviour
 {
@@ -15,6 +16,8 @@ public class PlayerScript : NetworkBehaviour
     public Camera mainCamera;
     public CharacterController characterController;
 
+    public GameState gameState;
+
     void Start()
     {
         if (IsOwner) {
@@ -24,6 +27,10 @@ public class PlayerScript : NetworkBehaviour
         if (!IsServer) {
             return;
         }
+        gameState.list.Add(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+
+        SpawnPlayersServerRpc();
+
     }
 
     void Update()
@@ -58,7 +65,7 @@ public class PlayerScript : NetworkBehaviour
 
     } 
 
-     [ServerRpc]
+    [ServerRpc]
     private void PlayerMovementServerRpc(Vector3 moveDir)
     {
         characterController.Move(moveDir.normalized * Time.deltaTime * movementSpeed);
@@ -114,5 +121,14 @@ public class PlayerScript : NetworkBehaviour
             transform.position = new Vector3(0, 10, 0);
             characterController.enabled = true;
         }
+    }
+
+    [ServerRpc]
+    private void SpawnPlayersServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        Debug.Log("---------------")
+        double radius = 360/gameState.list.Count;
+        int index = gameState.list.IndexOf(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+        gameObject.transform.position = new Vector3((float)Math.Cos((Math.PI / 180) * (radius * index)), 0, (float)Math.Sin((Math.PI / 180) * (radius * index))).normalized;
     }
 }

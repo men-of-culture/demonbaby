@@ -178,6 +178,7 @@ MonoBehaviour:
     type: 3}
   mainCamera: {fileID: 0}
   characterController: {fileID: -9209201360542858466}
+  gameState: {fileID: 11400000, guid: 0d4c22dab5ebd49e6b1c551152712dbb, type: 2}
 --- !u!1 &3859418083507040855
 GameObject:
   m_ObjectHideFlags: 0
