@@ -15,7 +15,6 @@ public class PlayerScript : NetworkBehaviour
     public GameObject projectile;
     public Camera mainCamera;
     public CharacterController characterController;
-
     public GameState gameState;
 
     void Start()
@@ -27,10 +26,8 @@ public class PlayerScript : NetworkBehaviour
         if (!IsServer) {
             return;
         }
-        gameState.list.Add(gameObject.GetComponent<NetworkObject>().OwnerClientId);
 
-        SpawnPlayersServerRpc();
-
+        gameState.list.Add(new GameState.PlayerState{ id = gameObject.GetComponent<NetworkObject>().OwnerClientId});
     }
 
     void Update()
@@ -40,6 +37,7 @@ public class PlayerScript : NetworkBehaviour
             PlayerLookAtMouse();
             PlayerMovement();
             PlayerShoot();
+            SpawnPlayersServerRpc();
         }
 
         if (!IsServer) return;
@@ -124,11 +122,13 @@ public class PlayerScript : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void SpawnPlayersServerRpc(ServerRpcParams serverRpcParams = default)
+    private void SpawnPlayersServerRpc()
     {
-        Debug.Log("---------------")
-        double radius = 360/gameState.list.Count;
-        int index = gameState.list.IndexOf(gameObject.GetComponent<NetworkObject>().OwnerClientId);
-        gameObject.transform.position = new Vector3((float)Math.Cos((Math.PI / 180) * (radius * index)), 0, (float)Math.Sin((Math.PI / 180) * (radius * index))).normalized;
+        foreach (var player in gameState.list)
+        {
+            double radius = (Math.PI / 180) * (360 / gameState.list.Count);
+            int index = gameState.list.FindIndex(x => x.id == gameObject.GetComponent<NetworkObject>().OwnerClientId);
+            gameObject.GetComponent<NetworkObject>().transform.position = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
+        }
     }
 }
