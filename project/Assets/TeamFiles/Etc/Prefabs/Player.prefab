@@ -37,7 +37,7 @@ Transform:
   - {fileID: 4836797442292926294}
   - {fileID: 8426818709230677015}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8443759119574082771
 MeshFilter:
@@ -173,11 +173,15 @@ MonoBehaviour:
   jumpHeight: 0
   lookAtMouseSpeed: 5
   knockbackForce: 50
-  health: 0
+  health: 3
+  controlsDisabled: 0
   projectile: {fileID: 7745462887207812692, guid: 7db1ca23b6300174c8a2fc766c3cade4,
     type: 3}
   mainCamera: {fileID: 0}
   characterController: {fileID: -9209201360542858466}
+  deathCanvas: {fileID: 0}
+  grounded:
+    m_InternalValue: 0
 --- !u!1 &3859418083507040855
 GameObject:
   m_ObjectHideFlags: 0

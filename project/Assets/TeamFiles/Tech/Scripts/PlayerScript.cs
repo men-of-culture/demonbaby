@@ -11,9 +11,13 @@ public class PlayerScript : NetworkBehaviour
     public int lookAtMouseSpeed;
     public int knockbackForce;
     public int health;
+    public bool controlsDisabled = false;
     public GameObject projectile;
     public Camera mainCamera;
+    public Renderer playerMesh;
     public CharacterController characterController;
+    public Canvas deathCanvas;
+    public NetworkVariable<bool> grounded;
 
     void Start()
     {
@@ -29,6 +33,7 @@ public class PlayerScript : NetworkBehaviour
     void Update()
     {
         if (IsOwner) {
+            if (controlsDisabled) return;
             PlayerCamera();
             PlayerLookAtMouse();
             PlayerMovement();
@@ -36,6 +41,8 @@ public class PlayerScript : NetworkBehaviour
         }
 
         if (!IsServer) return;
+        PlayerGroundedCheck();
+        PlayerGravity();
     }
     
     private void PlayerCamera() 
@@ -99,9 +106,39 @@ public class PlayerScript : NetworkBehaviour
         myProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
     }
 
+    private void PlayerGroundedCheck() {
+        if(characterController.isGrounded) grounded.Value = true;
+        else grounded.Value = false;
+    }
+
+    private void PlayerGravity() {
+        if(grounded.Value) return;
+        characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
+    }
+
+    [ClientRpc]
+    private void PlayerDeathClientRPC() {
+        if (IsOwner)  {
+            GameObject.Find("DeathCanvas").GetComponent<Canvas>().enabled = true;
+            controlsDisabled = true;
+            deathCanvas.enabled = true;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
+        if (other.gameObject.tag == "Lava"){
+            health--;
+            Debug.Log(health);
+            if (health < 1) {
+                playerMesh = gameObject.GetComponent<Renderer>();
+                Debug.Log(playerMesh.enabled);
+                playerMesh.enabled = false;
+                PlayerDeathClientRPC();
+                Debug.Log(playerMesh.enabled);
+            }
+        }
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
         {
             Vector3 vec3 = gameObject.transform.position - other.transform.position;
