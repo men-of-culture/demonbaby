@@ -13,6 +13,7 @@ public class PlayerScript : NetworkBehaviour
     public int knockbackForce;
     public int health;
     public bool controlsDisabled = false;
+    public bool ready = false;
     public GameObject projectile;
     public Camera mainCamera;
     public Renderer playerMesh;
@@ -21,36 +22,45 @@ public class PlayerScript : NetworkBehaviour
     public GameManagerScript gms;
     public NetworkVariable<bool> grounded;
     public NetworkVariable<bool> playerDead;
+    public GameState gameState;
+    public int readyCount;
 
     void Start()
     {
+        if (IsServer) {
+            gameState.list.Add(new GameState.PlayerState{ id = gameObject.GetComponent<NetworkObject>().OwnerClientId});
+            gms = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+            gms.addPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+        }
+
         if (IsOwner) {
             mainCamera = Camera.main;
         }
 
-        if (!IsServer) {
-            return;
-        }
-
-        gameState.list.Add(new GameState.PlayerState{ id = gameObject.GetComponent<NetworkObject>().OwnerClientId});
-        gms = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
-        gms.addPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+        SpawnPlayersServerRpc(); // Todo: fix positions on all players
     }
 
     void Update()
     {
         if (IsOwner) {
-            if (controlsDisabled) return;
-            PlayerCamera();
-            PlayerLookAtMouse();
-            PlayerMovement();
-            PlayerShoot();
-            SpawnPlayersServerRpc();
+            if (gms.readyUpPlayers.Count == 0)
+            {
+                if (controlsDisabled) return;
+                PlayerCamera();
+                PlayerLookAtMouse();
+                PlayerMovement();
+                PlayerShoot();
+            }
+            ReadyUp(); // Todo: Not working atm
         }
 
         if (!IsServer) return;
-        PlayerGroundedCheck();
-        PlayerGravity();
+        Debug.Log(gms.readyUpPlayers.Count);
+        if (gms.readyUpPlayers.Count == 0)
+        {
+            PlayerGroundedCheck();
+            PlayerGravity();
+        }
     }
     
     private void PlayerCamera() 
@@ -170,4 +180,16 @@ public class PlayerScript : NetworkBehaviour
             gameObject.GetComponent<NetworkObject>().transform.position = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
         }
     }
+
+    private void ReadyUp() 
+    {
+        if (Input.GetKey(KeyCode.Space)) ReadyUpServerRpc();
+    }
+
+    [ServerRpc]
+    private void ReadyUpServerRpc()
+    {
+        gms.readyPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+    }
+
 }

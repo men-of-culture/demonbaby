@@ -20,4 +20,10 @@ public class GameState : ScriptableObject
         public bool isReady = false;
         public bool isAlive = true;
     }
+
+    public PlayerState GetPlayer(ulong playerId)
+    {
+        Debug.Log($"Fra gamestate: {list.Find(x => x.id == playerId).id}");
+        return list.Find(x => x.id == playerId);
+    }
 }

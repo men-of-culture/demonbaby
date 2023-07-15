@@ -8,6 +8,7 @@ public class GameManagerScript : NetworkBehaviour
 
     public List<ulong> listOfPlayers; // Total amount of Players
     public List<ulong> remainingPlayers; // Remaining players still in the game.
+    public List<ulong> readyUpPlayers; // Amount of ready players
     
 
 
@@ -15,12 +16,20 @@ public class GameManagerScript : NetworkBehaviour
         if (listOfPlayers.Contains(id)) return;
         listOfPlayers.Add(id);
         remainingPlayers.Add(id);
+        readyUpPlayers.Add(id);
         Debug.Log(listOfPlayers.Count);
     }
     
     public void removePlayer(ulong id){
         if (!listOfPlayers.Contains(id)) return;
         remainingPlayers.Remove(id);
+        Debug.Log(listOfPlayers.Count);
+    }
+
+    public void readyPlayer(ulong id)
+    {
+        if (!readyUpPlayers.Contains(id)) return;
+        readyUpPlayers.Remove(id);
         Debug.Log(listOfPlayers.Count);
     }
     
