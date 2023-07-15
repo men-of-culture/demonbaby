@@ -17,7 +17,9 @@ public class PlayerScript : NetworkBehaviour
     public Renderer playerMesh;
     public CharacterController characterController;
     public Canvas deathCanvas;
+    public GameManagerScript gms;
     public NetworkVariable<bool> grounded;
+    public NetworkVariable<bool> playerDead;
 
     void Start()
     {
@@ -28,6 +30,8 @@ public class PlayerScript : NetworkBehaviour
         if (!IsServer) {
             return;
         }
+        gms = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+        gms.addPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
     }
 
     void Update()
@@ -130,13 +134,12 @@ public class PlayerScript : NetworkBehaviour
         if(!IsServer) return;
         if (other.gameObject.tag == "Lava"){
             health--;
-            Debug.Log(health);
             if (health < 1) {
-                playerMesh = gameObject.GetComponent<Renderer>();
-                Debug.Log(playerMesh.enabled);
-                playerMesh.enabled = false;
+                // TODO : Disable Player Mesh on Death.
+                playerDead.Value = true;
                 PlayerDeathClientRPC();
-                Debug.Log(playerMesh.enabled);
+                gms.removePlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+                gms.endGame();
             }
         }
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
