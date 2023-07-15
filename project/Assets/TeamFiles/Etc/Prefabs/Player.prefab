@@ -178,9 +178,13 @@ MonoBehaviour:
   projectile: {fileID: 7745462887207812692, guid: 7db1ca23b6300174c8a2fc766c3cade4,
     type: 3}
   mainCamera: {fileID: 0}
+  playerMesh: {fileID: 0}
   characterController: {fileID: -9209201360542858466}
   deathCanvas: {fileID: 0}
+  gms: {fileID: 0}
   grounded:
+    m_InternalValue: 0
+  playerDead:
     m_InternalValue: 0
 --- !u!1 &3859418083507040855
 GameObject:
@@ -244,7 +248,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 97f6ac902e9aada4ea5f7d7742f400da, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
