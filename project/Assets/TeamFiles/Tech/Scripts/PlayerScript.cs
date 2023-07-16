@@ -14,7 +14,6 @@ public class PlayerScript : NetworkBehaviour
     public bool controlsDisabled = false;
     public GameObject projectile;
     public Camera mainCamera;
-    public Renderer playerMesh;
     public CharacterController characterController;
     public Canvas deathCanvas;
     public GameManagerScript gms;
@@ -137,6 +136,7 @@ public class PlayerScript : NetworkBehaviour
             if (health < 1) {
                 // TODO : Disable Player Mesh on Death.
                 playerDead.Value = true;
+                GetComponent<AudioSource>().Play();
                 PlayerDeathClientRPC();
                 gms.removePlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
                 gms.endGame();
