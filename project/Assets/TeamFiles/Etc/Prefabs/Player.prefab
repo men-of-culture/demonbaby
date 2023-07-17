@@ -174,7 +174,7 @@ MonoBehaviour:
   lookAtMouseSpeed: 5
   knockbackForce: 50
   health: 3
-  controlsDisabled: 0
+  controlsDisabled: 1
   ready: 0
   projectile: {fileID: 7745462887207812692, guid: 7db1ca23b6300174c8a2fc766c3cade4,
     type: 3}
@@ -185,9 +185,7 @@ MonoBehaviour:
   gms: {fileID: 0}
   grounded:
     m_InternalValue: 0
-  playerDead:
-    m_InternalValue: 0
-  isAlive: 0
+  isAlive: 1
   isReady: 0
 --- !u!1 &3859418083507040855
 GameObject:

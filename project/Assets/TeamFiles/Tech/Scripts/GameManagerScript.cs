@@ -7,19 +7,37 @@ public class GameManagerScript : NetworkBehaviour
 {
     public List<GameObject> listOfPlayers; // List of players as gameobjects
 
-    public void addPlayer(GameObject gameObject)
+    public void AddPlayer(GameObject gameObject)
     {
         if (listOfPlayers.Contains(gameObject)) return;
         listOfPlayers.Add(gameObject);
     }
-    
-    public void endGame()
+
+    public void RemovePlayer(GameObject gameObject)
     {
-        if(listOfPlayers.Count >= 2 && listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isAlive == false).ToList().Count >= 1) endGameClientRPC();
+        if (!listOfPlayers.Contains(gameObject)) return;
+        listOfPlayers.Remove(gameObject);
+    }
+
+    public void StartGame()
+    {
+        if(listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == listOfPlayers.Count) StartGameClientRPC();
+    }
+
+    [ClientRpc]
+    public void StartGameClientRPC()
+    {
+        Debug.Log("Game started");
+    }
+    
+    public void EndGame()
+    {
+        if(listOfPlayers.Count >= 2 && listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isAlive == true).ToList().Count == 1) EndGameClientRPC();
+        // Todo: Consider draw endgame screen count == 0
     }
     
     [ClientRpc]
-    public void endGameClientRPC()
+    public void EndGameClientRPC()
     {
         GameObject.Find("EndCanvas").GetComponent<Canvas>().enabled = true;
     }
