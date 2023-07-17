@@ -1,48 +1,26 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 public class GameManagerScript : NetworkBehaviour
 {
+    public List<GameObject> listOfPlayers; // List of players as gameobjects
 
-    public List<ulong> listOfPlayers; // Total amount of Players
-    public List<ulong> remainingPlayers; // Remaining players still in the game.
-    public List<ulong> readyUpPlayers; // Amount of ready players
-    
-
-
-    public void addPlayer(ulong id){
-        if (listOfPlayers.Contains(id)) return;
-        listOfPlayers.Add(id);
-        remainingPlayers.Add(id);
-        readyUpPlayers.Add(id);
-        Debug.Log(listOfPlayers.Count);
-    }
-    
-    public void removePlayer(ulong id){
-        if (!listOfPlayers.Contains(id)) return;
-        remainingPlayers.Remove(id);
-        Debug.Log(listOfPlayers.Count);
-    }
-
-    public void readyPlayer(ulong id)
+    public void addPlayer(GameObject gameObject)
     {
-        if (!readyUpPlayers.Contains(id)) return;
-        readyUpPlayers.Remove(id);
-        Debug.Log(listOfPlayers.Count);
+        if (listOfPlayers.Contains(gameObject)) return;
+        listOfPlayers.Add(gameObject);
     }
     
-    public void endGame(){
-        if(listOfPlayers.Count >= 2 && remainingPlayers.Count <= 1) {
-            endGameClientRPC();
-        }
+    public void endGame()
+    {
+        if(listOfPlayers.Count >= 2 && listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isAlive == false).ToList().Count >= 1) endGameClientRPC();
     }
     
     [ClientRpc]
-    public void endGameClientRPC(){
+    public void endGameClientRPC()
+    {
         GameObject.Find("EndCanvas").GetComponent<Canvas>().enabled = true;
-        Debug.Log("Wha'eva");
     }
-
 }

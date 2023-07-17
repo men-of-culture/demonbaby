@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using System;
@@ -21,46 +19,38 @@ public class PlayerScript : NetworkBehaviour
     public Canvas deathCanvas;
     public GameManagerScript gms;
     public NetworkVariable<bool> grounded;
-    public NetworkVariable<bool> playerDead;
-    public GameState gameState;
-    public int readyCount;
+    public bool isAlive = true;
+    public bool isReady;
 
     void Start()
     {
-        if (IsServer) {
-            gameState.list.Add(new GameState.PlayerState{ id = gameObject.GetComponent<NetworkObject>().OwnerClientId});
+        if (IsServer) 
+        {
             gms = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
-            gms.addPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+            gms.addPlayer(gameObject);
+            // SpawnPlayers(); // works - need to fix ready up
         }
 
-        if (IsOwner) {
+        if (IsOwner) 
+        {
             mainCamera = Camera.main;
         }
-
-        SpawnPlayersServerRpc(); // Todo: fix positions on all players
     }
 
     void Update()
     {
-        if (IsOwner) {
-            if (gms.readyUpPlayers.Count == 0)
-            {
-                if (controlsDisabled) return;
-                PlayerCamera();
-                PlayerLookAtMouse();
-                PlayerMovement();
-                PlayerShoot();
-            }
-            ReadyUp(); // Todo: Not working atm
+        if (IsOwner) 
+        {
+            if (controlsDisabled) return;
+            PlayerCamera();
+            PlayerLookAtMouse();
+            PlayerMovement();
+            PlayerShoot();
         }
 
         if (!IsServer) return;
-        Debug.Log(gms.readyUpPlayers.Count);
-        if (gms.readyUpPlayers.Count == 0)
-        {
-            PlayerGroundedCheck();
-            PlayerGravity();
-        }
+        PlayerGroundedCheck();
+        PlayerGravity();
     }
     
     private void PlayerCamera() 
@@ -80,8 +70,7 @@ public class PlayerScript : NetworkBehaviour
         if(moveDir == new Vector3(0, 0, 0)) return;
 
         PlayerMovementServerRpc(moveDir);
-
-    } 
+    }
 
     [ServerRpc]
     private void PlayerMovementServerRpc(Vector3 moveDir)
@@ -89,7 +78,7 @@ public class PlayerScript : NetworkBehaviour
         characterController.Move(moveDir.normalized * Time.deltaTime * movementSpeed);
     }
 
-        private void PlayerLookAtMouse()
+    private void PlayerLookAtMouse()
     {
         if (mainCamera is not { }) return;
 
@@ -112,9 +101,7 @@ public class PlayerScript : NetworkBehaviour
 
     private void PlayerShoot()
     {
-        if (Input.GetKeyUp(KeyCode.Mouse0) && IsOwner){
-            PlayerShootServerRpc();
-        }
+        if (Input.GetKeyUp(KeyCode.Mouse0) && IsOwner) PlayerShootServerRpc();
     }
 
     [ServerRpc]
@@ -124,19 +111,23 @@ public class PlayerScript : NetworkBehaviour
         myProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
     }
 
-    private void PlayerGroundedCheck() {
+    private void PlayerGroundedCheck() 
+    {
         if(characterController.isGrounded) grounded.Value = true;
         else grounded.Value = false;
     }
 
-    private void PlayerGravity() {
+    private void PlayerGravity() 
+    {
         if(grounded.Value) return;
         characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
     }
 
     [ClientRpc]
-    private void PlayerDeathClientRPC() {
-        if (IsOwner)  {
+    private void PlayerDeathClientRPC()
+    {
+        if (IsOwner)
+        {
             GameObject.Find("DeathCanvas").GetComponent<Canvas>().enabled = true;
             controlsDisabled = true;
             deathCanvas.enabled = true;
@@ -146,22 +137,26 @@ public class PlayerScript : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
-        if (other.gameObject.tag == "Lava"){
+
+        if (other.gameObject.tag == "Lava")
+        {
             health--;
-            if (health < 1) {
+            if (health < 1)
+            {
                 // TODO : Disable Player Mesh on Death.
-                playerDead.Value = true;
                 PlayerDeathClientRPC();
-                gms.removePlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
+                isAlive = false;
                 gms.endGame();
             }
         }
+
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
         {
             Vector3 vec3 = gameObject.transform.position - other.transform.position;
             vec3 = new Vector3(vec3.x, 0.0f, vec3.z).normalized * Time.deltaTime * knockbackForce;
             characterController.Move(vec3);
         }
+
         if (other.gameObject.name == "ResetTrigger")
         {
             characterController.enabled = false;
@@ -170,26 +165,13 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    private void SpawnPlayersServerRpc()
+    private void SpawnPlayers()
     {
-        foreach (var player in gameState.list)
+        foreach (var player in gms.listOfPlayers)
         {
-            double radius = (Math.PI / 180) * (360 / gameState.list.Count);
-            int index = gameState.list.FindIndex(x => x.id == gameObject.GetComponent<NetworkObject>().OwnerClientId);
-            gameObject.GetComponent<NetworkObject>().transform.position = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
+            double radius = (Math.PI / 180) * (360 / gms.listOfPlayers.Count);
+            int index = gms.listOfPlayers.FindIndex(x => x.Equals(player));
+            player.gameObject.transform.position = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
         }
     }
-
-    private void ReadyUp() 
-    {
-        if (Input.GetKey(KeyCode.Space)) ReadyUpServerRpc();
-    }
-
-    [ServerRpc]
-    private void ReadyUpServerRpc()
-    {
-        gms.readyPlayer(gameObject.GetComponent<NetworkObject>().OwnerClientId);
-    }
-
 }
