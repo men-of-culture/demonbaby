@@ -175,17 +175,17 @@ MonoBehaviour:
   lookAtMouseSpeed: 5
   knockbackForce: 50
   health: 3
-  controlsDisabled: 0
+  controlsDisabled: 1
   projectile: {fileID: 7745462887207812692, guid: 7db1ca23b6300174c8a2fc766c3cade4,
     type: 3}
   mainCamera: {fileID: 0}
   characterController: {fileID: -9209201360542858466}
-  deathCanvas: {fileID: 0}
   gms: {fileID: 0}
   grounded:
     m_InternalValue: 0
-  playerDead:
-    m_InternalValue: 0
+  isAlive: 1
+  isReady: 0
+  allReady: 0
 --- !u!82 &7834456043791706817
 AudioSource:
   m_ObjectHideFlags: 0
@@ -344,7 +344,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: cedbf2da35d8bd147b91df2b88123ff5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

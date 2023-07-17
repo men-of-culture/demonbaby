@@ -1396,6 +1396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listOfPlayers: 
   remainingPlayers: 
+  readyUpPlayers: 
 --- !u!4 &1207428124
 Transform:
   m_ObjectHideFlags: 0
