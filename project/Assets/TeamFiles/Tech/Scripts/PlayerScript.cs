@@ -16,10 +16,12 @@ public class PlayerScript : NetworkBehaviour
     public Camera mainCamera;
     public CharacterController characterController;
     public GameManagerScript gms;
-    public NetworkVariable<bool> grounded;
+    // public GroundedScript grounded;
     public bool isAlive;
     public bool isReady;
     public bool allReady; // should be deleted when raycast is getting introduced to groundedPlayers
+    public bool grounded;
+    public bool onTerrain;
 
     void Start()
     {
@@ -51,8 +53,8 @@ public class PlayerScript : NetworkBehaviour
             if (gms.listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == gms.listOfPlayers.Count && !allReady)
             {
                 controlsDisabled = false;
-                GroundPlayer();
             }
+            GroundPlayer();
         }
 
         if (IsOwner) 
@@ -141,7 +143,7 @@ public class PlayerScript : NetworkBehaviour
 
     private void GroundPlayer() 
     {
-        if(characterController.isGrounded) 
+        if(grounded)
         {
             allReady = true;
             return;

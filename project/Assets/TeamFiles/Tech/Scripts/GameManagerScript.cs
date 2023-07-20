@@ -6,6 +6,18 @@ using System.Linq;
 public class GameManagerScript : NetworkBehaviour
 {
     public List<GameObject> listOfPlayers; // List of players as gameobjects
+    public GroundedScript groundedScript;
+
+    void Start()
+    {
+        groundedScript = gameObject.GetComponent<GroundedScript>();
+    }
+
+    void Update()
+    {
+        if (!IsServer) return;
+        GroundPlayers();
+    }
 
     public void AddPlayer(GameObject gameObject)
     {
@@ -22,6 +34,16 @@ public class GameManagerScript : NetworkBehaviour
     public void StartGame()
     {
         if(listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == listOfPlayers.Count) StartGameClientRPC();
+    }
+
+    public void GroundPlayers()
+    {
+        foreach (var player in listOfPlayers)
+        {
+            groundedScript.castGroundRays(player.transform);
+            player.GetComponent<PlayerScript>().grounded = groundedScript.checkIfGrounded();
+            player.GetComponent<PlayerScript>().onTerrain = groundedScript.checkIfOnTerrain();
+        }
     }
 
     [ClientRpc]

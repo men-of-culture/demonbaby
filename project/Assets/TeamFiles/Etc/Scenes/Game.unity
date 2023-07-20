@@ -323,7 +323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253833944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -30.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -365,6 +365,7 @@ MonoBehaviour:
   mainMenuCanvas: {fileID: 0}
   helpMenuCanvas: {fileID: 0}
   playerState: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &273624190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,7 +893,7 @@ GameObject:
   - component: {fileID: 998762305}
   - component: {fileID: 998762304}
   m_Layer: 0
-  m_Name: Arena (1)
+  m_Name: Lava
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -977,7 +978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998762303}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -30.9, z: 1.69}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -994,6 +995,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1008197750}
   - component: {fileID: 1008197749}
+  - component: {fileID: 1008197751}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1078,6 +1080,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1008197751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008197748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 2
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1 &1093315001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,6 +1384,7 @@ GameObject:
   - component: {fileID: 1207428124}
   - component: {fileID: 1207428123}
   - component: {fileID: 1207428122}
+  - component: {fileID: 1207428125}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1394,9 +1420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d01f94daf75e4841898a156b894fa28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listOfPlayers: 
-  remainingPlayers: 
-  readyUpPlayers: 
+  listOfPlayers: []
+  groundedScript: {fileID: 0}
 --- !u!4 &1207428124
 Transform:
   m_ObjectHideFlags: 0
@@ -1412,6 +1437,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1207428125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207428121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e3e4eccd3d5d142adc513f3de044cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grounded: 0
+  onTerrain: 0
+  rayDirections: []
+  rayLengths: []
+  rayHits: 
+  rayHitNames: []
 --- !u!1 &1913071744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,7 +1690,7 @@ GameObject:
   - component: {fileID: 2063869850}
   - component: {fileID: 2063869849}
   m_Layer: 0
-  m_Name: ' Lava1'
+  m_Name: LavaTrigger
   m_TagString: Lava
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1732,7 +1775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063869848}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2, y: -27.23, z: 37.79}
+  m_LocalPosition: {x: -0.2, y: -1, z: 37.79}
   m_LocalScale: {x: 50, y: 10, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
