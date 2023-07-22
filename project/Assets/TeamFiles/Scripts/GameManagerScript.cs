@@ -33,16 +33,24 @@ public class GameManagerScript : NetworkBehaviour
 
     public void StartGame()
     {
-        if(listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == listOfPlayers.Count) StartGameClientRPC();
+        if(listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == listOfPlayers.Count)
+        {
+            foreach (var player in listOfPlayers)
+            {
+                player.GetComponent<PlayerScript>().allReady = true;
+            }
+            StartGameClientRPC();
+        }
     }
 
     public void GroundPlayers()
     {
         foreach (var player in listOfPlayers)
         {
-            groundedScript.castGroundRays(player.transform);
-            player.GetComponent<PlayerScript>().grounded = groundedScript.checkIfGrounded();
-            player.GetComponent<PlayerScript>().onTerrain = groundedScript.checkIfOnTerrain();
+            // groundedScript.castGroundRays(player.transform);
+            // player.GetComponent<PlayerScript>().grounded = groundedScript.checkIfGrounded();
+            // player.GetComponent<PlayerScript>().onTerrain = groundedScript.checkIfOnTerrain();
+            // player.GetComponent<PlayerScript>().grounded = groundedScript.GroundedCheck(player.transform);
         }
     }
 

@@ -19,7 +19,7 @@ public class PlayerScript : NetworkBehaviour
     // public GroundedScript grounded;
     public bool isAlive;
     public bool isReady;
-    public bool allReady; // should be deleted when raycast is getting introduced to groundedPlayers
+    public bool allReady; // should be deleted/moved to gamemanager(maybe its ok to keep it here) when raycast is getting introduced to groundedPlayers
     public bool grounded;
     public bool onTerrain;
 
@@ -30,6 +30,11 @@ public class PlayerScript : NetworkBehaviour
             gms = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
             gms.AddPlayer(gameObject);
             SpawnPlayers();
+            
+            // Set start position
+            characterController.enabled = false;
+            transform.position += new Vector3(0, 2, 0);
+            characterController.enabled = true;
         }
 
         if (IsOwner) 
@@ -53,8 +58,10 @@ public class PlayerScript : NetworkBehaviour
             if (gms.listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == gms.listOfPlayers.Count && !allReady)
             {
                 controlsDisabled = false;
+                allReady = true;
             }
-            GroundPlayer();
+            grounded = GetComponent<GroundedScript>().GroundedCheck(transform);
+            if(!grounded && allReady) characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
         }
 
         if (IsOwner) 
@@ -148,7 +155,10 @@ public class PlayerScript : NetworkBehaviour
             allReady = true;
             return;
         }
-        else characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
+        else if(!grounded && allReady)
+        {
+            characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
+        }
     }
 
     [ClientRpc]
@@ -160,7 +170,7 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if(!IsServer) return;
 
@@ -199,7 +209,8 @@ public class PlayerScript : NetworkBehaviour
         {
             double radius = (Math.PI / 180) * (360 / gms.listOfPlayers.Count);
             int index = gms.listOfPlayers.FindIndex(x => x.Equals(player));
-            player.gameObject.transform.position = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
+            var playerXZ = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
+            player.gameObject.transform.position = playerXZ + new Vector3(0, player.gameObject.transform.position.y, 0);
         }
     }
 }
