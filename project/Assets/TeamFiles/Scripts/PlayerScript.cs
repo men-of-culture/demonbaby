@@ -16,12 +16,12 @@ public class PlayerScript : NetworkBehaviour
     public Camera mainCamera;
     public CharacterController characterController;
     public GameManagerScript gms;
-    // public GroundedScript grounded;
     public bool isAlive;
     public bool isReady;
     public bool allReady; // should be deleted/moved to gamemanager(maybe its ok to keep it here) when raycast is getting introduced to groundedPlayers
     public bool grounded;
     public bool onTerrain;
+    public GroundedScript groundedScript;
 
     void Start()
     {
@@ -35,6 +35,8 @@ public class PlayerScript : NetworkBehaviour
             characterController.enabled = false;
             transform.position += new Vector3(0, 2, 0);
             characterController.enabled = true;
+
+            groundedScript = GetComponent<GroundedScript>();
         }
 
         if (IsOwner) 
@@ -60,7 +62,7 @@ public class PlayerScript : NetworkBehaviour
                 controlsDisabled = false;
                 allReady = true;
             }
-            grounded = GetComponent<GroundedScript>().GroundedCheck(transform);
+            grounded = groundedScript.GroundedCheck(transform);
             if(!grounded && allReady) characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
         }
 
@@ -146,19 +148,6 @@ public class PlayerScript : NetworkBehaviour
         if(controlsDisabled) return;
         var myProjectile = Instantiate(projectile, transform.position + gameObject.transform.forward, transform.rotation);
         myProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
-    }
-
-    private void GroundPlayer() 
-    {
-        if(grounded)
-        {
-            allReady = true;
-            return;
-        }
-        else if(!grounded && allReady)
-        {
-            characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
-        }
     }
 
     [ClientRpc]
