@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Lava
   - Trigger
+  - Terrain
   layers:
   - Default
   - TransparentFX

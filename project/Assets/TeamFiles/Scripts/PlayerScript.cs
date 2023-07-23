@@ -33,7 +33,7 @@ public class PlayerScript : NetworkBehaviour
             
             // Set start position
             characterController.enabled = false;
-            transform.position += new Vector3(0, 2, 0);
+            transform.position += new Vector3(0, 1, 0);
             characterController.enabled = true;
 
             groundedScript = GetComponent<GroundedScript>();
@@ -78,7 +78,7 @@ public class PlayerScript : NetworkBehaviour
     
     private void PlayerCamera() 
     {
-        mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 10, -10);
+        mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 15, -15);
     }
 
     private void PlayerMovement() 

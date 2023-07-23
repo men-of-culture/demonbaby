@@ -21,7 +21,8 @@ public class GroundedScript : NetworkBehaviour
     public bool GroundedCheck(Transform playerTransform)
     {
         CastGroundRays(playerTransform);
-        if(CheckIfTrigger()) return false;
+        // if(CheckIfTrigger() || CheckIfLava()) return false;
+        if(!CheckHitTag("Terrain") || !CheckHitName("Terrain")) return false;
         return CheckIfGrounded();
     }
 
@@ -78,13 +79,13 @@ public class GroundedScript : NetworkBehaviour
         return (rayHits[0] || rayHits[1] || rayHits[2] || rayHits[3] || rayHits[4]);
     }
 
-    public bool CheckIfOnTerrain()
+    public bool CheckHitTag(string hitTag)
     {
-        return (rayHitNames[0] == "Terrain" || rayHitNames[1] == "Terrain" || rayHitNames[2] == "Terrain" || rayHitNames[3] == "Terrain" || rayHitNames[4] == "Terrain");
+        return (rayHitTags[0] == hitTag || rayHitTags[1] == hitTag || rayHitTags[2] == hitTag || rayHitTags[3] == hitTag || rayHitTags[4] == hitTag);
     }
 
-    public bool CheckIfTrigger()
+    public bool CheckHitName(string hitName)
     {
-        return (rayHitTags[0] == "Trigger" || rayHitTags[1] == "Trigger" || rayHitTags[2] == "Trigger" || rayHitTags[3] == "Trigger" || rayHitTags[4] == "Trigger");
+        return (rayHitTags[0] == hitName || rayHitTags[1] == hitName || rayHitTags[2] == hitName || rayHitTags[3] == hitName || rayHitTags[4] == hitName);
     }
 }
