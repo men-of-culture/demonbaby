@@ -21,7 +21,6 @@ public class GroundedScript : NetworkBehaviour
     public bool GroundedCheck(Transform playerTransform)
     {
         CastGroundRays(playerTransform);
-        // if(CheckIfTrigger() || CheckIfLava()) return false;
         if(!CheckHitTag("Terrain") || !CheckHitName("Terrain")) return false;
         return CheckIfGrounded();
     }

@@ -37,7 +37,7 @@ public class GameManagerScript : NetworkBehaviour
             {
                 player.GetComponent<PlayerScript>().allReady = true;
             }
-            StartGameClientRPC();
+            StartGameClientRPC(); // TODO: countdown on server here and update countdown canvas for clients
         }
     }
 
