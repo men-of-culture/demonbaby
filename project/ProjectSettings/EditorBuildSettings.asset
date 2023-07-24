@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TeamFiles/Etc/Scenes/Main menu.unity
+    path: Assets/TeamFiles/Scenes/Main menu.unity
     guid: f4940de5d6af5ad4e9226b5bc3d1aa65
   - enabled: 1
-    path: Assets/TeamFiles/Etc/Scenes/Game.unity
+    path: Assets/TeamFiles/Scenes/Game.unity
     guid: 2d0d1f5eb1bfdcc488f9a0f68c31fab6
   m_configObjects: {}
