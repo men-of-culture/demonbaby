@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class GameManagerScript : NetworkBehaviour
 {
@@ -49,7 +50,19 @@ public class GameManagerScript : NetworkBehaviour
     
     public void EndGame()
     {
-        if(listOfPlayers.Count >= 2 && listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isAlive == true).ToList().Count == 1) EndGameClientRPC();
+        if(!IsServer) return;
+        if(listOfPlayers.Count >= 2 && listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isAlive == true).ToList().Count == 1) 
+        {
+            foreach(var player in listOfPlayers) 
+            {
+                if(player.GetComponent<PlayerScript>().isAlive)
+                {
+                    player.GetComponent<PlayerScript>().isAlive = false;
+                    player.GetComponent<PlayerScript>().controlsDisabled = true;
+                }
+            }
+            EndGameClientRPC();
+        }
         // Todo: Consider draw endgame screen count == 0
     }
     
