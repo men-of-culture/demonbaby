@@ -22,6 +22,8 @@ public class PlayerScript : NetworkBehaviour
     public bool grounded;
     public bool onTerrain;
     public GroundedScript groundedScript;
+    private float knockbackTimer = 0.0f;
+    private Vector3 knockbackDirection;
 
     void Start()
     {
@@ -62,8 +64,23 @@ public class PlayerScript : NetworkBehaviour
                 controlsDisabled = false;
                 allReady = true;
             }
+
             grounded = groundedScript.GroundedCheck(transform);
             if(!grounded && allReady) characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
+
+            if(knockbackTimer > 0.0f && knockbackTimer <= 1.0f)
+            {
+                knockbackDirection = new Vector3(knockbackDirection.x, 0.0f, knockbackDirection.z).normalized * Time.deltaTime * knockbackForce;
+                characterController.Move(knockbackDirection);
+                knockbackTimer += Time.deltaTime;
+            }
+            else if(allReady && isAlive)
+            {
+                knockbackTimer = 0.0f;
+                controlsDisabled = false;
+            }
+
+            
         }
 
         if (IsOwner) 
@@ -179,9 +196,10 @@ public class PlayerScript : NetworkBehaviour
 
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
         {
-            Vector3 vec3 = gameObject.transform.position - other.transform.position;
-            vec3 = new Vector3(vec3.x, 0.0f, vec3.z).normalized * Time.deltaTime * knockbackForce;
-            characterController.Move(vec3);
+            knockbackDirection = gameObject.transform.position - other.transform.position + other.gameObject.transform.forward;
+            knockbackTimer = 0.01f;
+            controlsDisabled = true;
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.name == "ResetTrigger")
