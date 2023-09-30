@@ -182,6 +182,7 @@ public class PlayerScript : NetworkBehaviour
             Vector3 vec3 = gameObject.transform.position - other.transform.position;
             vec3 = new Vector3(vec3.x, 0.0f, vec3.z).normalized * Time.deltaTime * knockbackForce;
             characterController.Move(vec3);
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.name == "ResetTrigger")
