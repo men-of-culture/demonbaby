@@ -25,7 +25,6 @@ public class PlayerScript : NetworkBehaviour
     public GroundedScript groundedScript;
     private float knockbackTimer = 0.0f;
     private Vector3 knockbackDirection;
-
     private float startGameCountDown = 3.0f;
 
     void Start()
@@ -91,7 +90,6 @@ public class PlayerScript : NetworkBehaviour
                 RemoveReadyCanvasClientRpc();
                 controlsDisabled = false;
             }
-            
         }
 
         if (IsOwner) 
