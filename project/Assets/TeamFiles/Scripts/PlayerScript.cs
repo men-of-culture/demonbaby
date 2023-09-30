@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 using System.Linq;
+using TMPro;
 
 public class PlayerScript : NetworkBehaviour
 {
@@ -24,6 +25,7 @@ public class PlayerScript : NetworkBehaviour
     public GroundedScript groundedScript;
     private float knockbackTimer = 0.0f;
     private Vector3 knockbackDirection;
+    private float startGameCountDown = 3.0f;
 
     void Start()
     {
@@ -44,6 +46,7 @@ public class PlayerScript : NetworkBehaviour
         if (IsOwner) 
         {
             mainCamera = Camera.main;
+            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().enabled = true;
         }
     }
 
@@ -59,11 +62,7 @@ public class PlayerScript : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (gms.listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == gms.listOfPlayers.Count && !allReady)
-            {
-                controlsDisabled = false;
-                allReady = true;
-            }
+            if(gms.listOfPlayers.Where(x => x.GetComponent<PlayerScript>().isReady == true).ToList().Count == gms.listOfPlayers.Count && !allReady) allReady = true;
 
             grounded = groundedScript.GroundedCheck(transform);
             if(!grounded && allReady) characterController.Move(new Vector3(0, -9.82f, 0) * Time.deltaTime);
@@ -74,13 +73,23 @@ public class PlayerScript : NetworkBehaviour
                 characterController.Move(knockbackDirection);
                 knockbackTimer += Time.deltaTime;
             }
-            else if(allReady && isAlive)
+            else if(allReady && isAlive && startGameCountDown <= 0.0f)
             {
                 knockbackTimer = 0.0f;
                 controlsDisabled = false;
             }
 
-            
+            if(allReady && startGameCountDown > 0.0f)
+            {
+                startGameCountDown -= Time.deltaTime;
+                UpdateReadyCanvasClientRpc(startGameCountDown);
+            }
+
+            if(startGameCountDown <= 0.0f)
+            {
+                RemoveReadyCanvasClientRpc();
+                controlsDisabled = false;
+            }
         }
 
         if (IsOwner) 
@@ -90,9 +99,14 @@ public class PlayerScript : NetworkBehaviour
             PlayerMovement();
             PlayerShoot();
             ReadyUp();
+
+            if(allReady && startGameCountDown > 0.0f)
+            {
+                
+            }
         }
     }
-    
+
     private void PlayerCamera() 
     {
         mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 15, -15);
@@ -122,7 +136,35 @@ public class PlayerScript : NetworkBehaviour
     {
         if (!IsServer) return;
         isReady = true;
+        ReadyUpCanvasClientRpc();
         // gms.StartGame(); //Todo: implement canvas with coundown / waiting for players to ready up
+    }
+
+    [ClientRpc]
+    private void ReadyUpCanvasClientRpc()
+    {
+        if(IsOwner)
+        {
+            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().GetComponentsInChildren<TextMeshProUGUI>().First().text = "You are ready";
+        }
+    }
+
+    [ClientRpc]
+    private void UpdateReadyCanvasClientRpc(float timer)
+    {
+        if(IsOwner)
+        {
+            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().GetComponentsInChildren<TextMeshProUGUI>().First().text = timer.ToString("F0");
+        }
+    }
+
+    [ClientRpc]
+    private void RemoveReadyCanvasClientRpc()
+    {
+        if(IsOwner)
+        {
+            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().enabled = false;
+        }
     }
 
     [ServerRpc]
