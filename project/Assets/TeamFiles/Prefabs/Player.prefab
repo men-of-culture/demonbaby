@@ -174,7 +174,7 @@ MonoBehaviour:
   movementSpeed: 1
   jumpHeight: 0
   lookAtMouseSpeed: 5
-  knockbackForce: 50
+  knockbackForce: 15
   health: 3
   controlsDisabled: 1
   projectile: {fileID: 7745462887207812692, guid: 7db1ca23b6300174c8a2fc766c3cade4,
