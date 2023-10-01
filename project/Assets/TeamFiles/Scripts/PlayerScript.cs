@@ -109,7 +109,7 @@ public class PlayerScript : NetworkBehaviour
 
     private void PlayerCamera() 
     {
-        mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 15, -15);
+        mainCamera.gameObject.transform.position = gameObject.transform.position + new Vector3(0, 20, -20);
     }
 
     private void PlayerMovement() 
