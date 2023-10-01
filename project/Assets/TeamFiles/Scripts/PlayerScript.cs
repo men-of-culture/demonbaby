@@ -3,6 +3,7 @@ using Unity.Netcode;
 using System;
 using System.Linq;
 using TMPro;
+using System.Threading;
 
 public class PlayerScript : NetworkBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerScript : NetworkBehaviour
     private float knockbackTimer = 0.0f;
     private Vector3 knockbackDirection;
     private float startGameCountDown = 3.0f;
+    private float stayedInLavaTimer = 0.0f;
 
     void Start()
     {
@@ -82,10 +84,10 @@ public class PlayerScript : NetworkBehaviour
             if(allReady && startGameCountDown > 0.0f)
             {
                 startGameCountDown -= Time.deltaTime;
-                UpdateReadyCanvasClientRpc(startGameCountDown);
+                ReadyUpCanvasClientRpc(startGameCountDown);
             }
 
-            if(startGameCountDown <= 0.0f)
+            if(startGameCountDown <= 0.0f && isAlive)
             {
                 RemoveReadyCanvasClientRpc();
                 controlsDisabled = false;
@@ -137,24 +139,14 @@ public class PlayerScript : NetworkBehaviour
         if (!IsServer) return;
         isReady = true;
         ReadyUpCanvasClientRpc();
-        // gms.StartGame(); //Todo: implement canvas with coundown / waiting for players to ready up
     }
 
     [ClientRpc]
-    private void ReadyUpCanvasClientRpc()
+    private void ReadyUpCanvasClientRpc(float timer = float.MinValue)
     {
         if(IsOwner)
         {
-            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().GetComponentsInChildren<TextMeshProUGUI>().First().text = "You are ready";
-        }
-    }
-
-    [ClientRpc]
-    private void UpdateReadyCanvasClientRpc(float timer)
-    {
-        if(IsOwner)
-        {
-            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().GetComponentsInChildren<TextMeshProUGUI>().First().text = timer.ToString("F0");
+            GameObject.Find("ReadyUpCanvas").GetComponent<Canvas>().GetComponentsInChildren<TextMeshProUGUI>().First().text = timer == float.MinValue ? "You are ready" : timer.ToString("F0");
         }
     }
 
@@ -224,16 +216,8 @@ public class PlayerScript : NetworkBehaviour
 
         if (other.gameObject.tag == "Lava")
         {
-            health--;
-            if (health < 1)
-            {
-                // TODO : Disable Player Mesh on Death.
-                GetComponent<AudioSource>().Play();
-                PlayerDeathClientRPC();
-                isAlive = false;
-                controlsDisabled = true;
-                gms.EndGame();
-            }
+            health -= 3;
+            KillPlayer();
         }
 
         if (other.gameObject.name == "Projectile(Clone)" && other.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
@@ -252,6 +236,23 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if(!IsServer) return;
+
+        if (other.gameObject.tag == "Lava" && isAlive)
+        {
+            stayedInLavaTimer += Time.deltaTime;
+            if (stayedInLavaTimer >= 3.0f)
+            {
+                health--;
+                stayedInLavaTimer = 0.0f;
+                KillPlayer();
+            }
+        }
+    }
+
+
     private void SpawnPlayers()
     {
         foreach (var player in gms.listOfPlayers)
@@ -260,6 +261,19 @@ public class PlayerScript : NetworkBehaviour
             int index = gms.listOfPlayers.FindIndex(x => x.Equals(player));
             var playerXZ = new Vector3((float)Math.Cos(radius * index), 0, (float)Math.Sin(radius * index)).normalized * 5;
             player.gameObject.transform.position = playerXZ + new Vector3(0, player.gameObject.transform.position.y, 0);
+        }
+    }
+
+    private void KillPlayer()
+    {
+        if (health < 1)
+        {
+            // TODO : Disable Player Mesh on Death.
+            GetComponent<AudioSource>().Play();
+            PlayerDeathClientRPC();
+            isAlive = false;
+            controlsDisabled = true;
+            gms.EndGame();
         }
     }
 }
