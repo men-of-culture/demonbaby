@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject changeScenePrefab;
 
     public Canvas mainMenuCanvas;
     public Canvas helpMenuCanvas;
@@ -23,7 +25,7 @@ public class MainMenuScript : MonoBehaviour
     
     public void StartGame() {
         audioSource.Play();
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        changeScenePrefab.GetComponent<SceneChangerScript>().FadeToScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Help() {
